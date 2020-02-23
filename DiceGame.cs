@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DiceGame
 {
-    class DiceGame
+    public class DiceGame
     {
         public Enums.resultType result { get; set; }
         public int bet { get; set; }

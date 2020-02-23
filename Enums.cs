@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DiceGame
 {
-    class Enums
+    public  class Enums
     {
         public enum resultType
         {

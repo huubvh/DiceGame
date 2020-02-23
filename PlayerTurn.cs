@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DiceGame
 {
-    class PlayerTurn
+    public class PlayerTurn
     {
         public List<int> PlayerDice { get; set; }
 

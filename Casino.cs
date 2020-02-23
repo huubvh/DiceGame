@@ -3,21 +3,24 @@ using System.Collections.Generic;
 
 namespace DiceGame
 {
-    class Program
-    {
-  
 
+    public class Casino
+    {
+
+        public static int playerBalance = 0;
         static void Main(string[] args)
         {
+            Console.WriteLine("Welcome to the Casino, you have been awarded 100 in your balance. \nWhat do you want to play?");
+            playerBalance = 100;
             Play();
         }
 
-        static void Play()
+        public static void Play()
         {
-            Console.WriteLine("Welcome to the Casino, what do you want to play?");
+           
             Console.WriteLine("For Dice press 'D'");
             Console.WriteLine("For Cards press 'C'");
-
+            
             string input = Console.ReadLine();
                 if (input == "d"|| input == "D")
             {
@@ -34,9 +37,10 @@ namespace DiceGame
             }
 
         }
-        static void PlayDiceGame(int diceAmount, int diceType)
+        public static void PlayDiceGame(int diceAmount, int diceType)
         {
             Console.WriteLine("Welcome to the Dice Game. \nYou can roll three dice. Make sure you don't roll a pair, or you might lose!");
+
 
             // initialize
             DiceGame currentGame = new DiceGame();
@@ -44,7 +48,8 @@ namespace DiceGame
             currentGame.playerTurn.PlayerDice = new List<int>();
             currentGame.diceAmount = diceAmount;
             currentGame.diceType = diceType;
-
+            currentGame.bet = enterBet();
+            
             //start
             currentGame.pushDie = Dice.DiceRoll(currentGame.diceType);
             Console.WriteLine("\nThe push is " + currentGame.pushDie);
@@ -66,13 +71,18 @@ namespace DiceGame
             switch (currentGame.result)
             {
                 case Enums.resultType.winDirect:
-                    Console.WriteLine("You won! single payout!");
+                    currentGame.win = currentGame.bet * 2;
+                    Console.WriteLine("You won! Single payout, you win "+ currentGame.win +"!");
+                    playerBalance += currentGame.win - currentGame.bet;
                     break;
                 case Enums.resultType.winShove:
-                    Console.WriteLine("You won the Shove! double payout!");
+                    currentGame.win = currentGame.bet * 10;
+                    playerBalance += currentGame.win - currentGame.bet;
+                    Console.WriteLine("You won the Shove! Nine times payout, you win "+ currentGame.win +"!");
                     break;
                 case Enums.resultType.lose:
-                    Console.WriteLine("You have lost!");
+                    Console.WriteLine("You have lost, better luck next time");
+                    playerBalance -= currentGame.bet;
                     break;
                 default:
                     Console.WriteLine("An error has occurred, We cannot determine the outcome of the game.");
@@ -80,7 +90,8 @@ namespace DiceGame
 
 
             }
-            
+
+            Console.WriteLine("\nYour current balance = " + playerBalance);
             Console.WriteLine("\nPress 'p' to play again, press any other key to end the game");
             string input = Console.ReadLine();
             if (input == "p")
@@ -91,7 +102,7 @@ namespace DiceGame
 
 
         }
-        static PlayerTurn PlayerRolls(DiceGame inputGame)
+        public static PlayerTurn PlayerRolls(DiceGame inputGame)
         {
             List<int> currentGameDice = new List<int>();
             currentGameDice.Add(inputGame.pushDie);
@@ -129,7 +140,7 @@ namespace DiceGame
 
         }
 
-        static Enums.resultType Shove(DiceGame inputGame)
+        public static Enums.resultType Shove(DiceGame inputGame)
         {
             DiceGame shove = new DiceGame();
             shove.shoveDie = Dice.DiceRoll(inputGame.diceType);
@@ -149,6 +160,27 @@ namespace DiceGame
             }
 
             return shove.result;
+        }
+
+        public static int enterBet()
+        {
+            int betAmount = 0;
+            Console.WriteLine("Your current balance = "+playerBalance);
+            Console.WriteLine("How much do you want to bet?");
+            string betAmountString = Console.ReadLine();
+            
+            try
+            {
+                betAmount = int.Parse(betAmountString);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine($"you have not entered a valid amount");
+                enterBet();
+            }
+            
+            return (betAmount);
+
         }
     }
 }
